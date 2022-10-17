@@ -13,8 +13,12 @@ var quizSection = document.getElementById('quiz-section');
 var initialsInput = document.getElementById('initials');
 var msgDiv = document.getElementById('msg');
 var submitBtn = document.getElementById('submit');
+var initialsInput = document.getElementById('initialInput');
+var savedScore = document.getElementById('savedScore');
+var goBackBtn = document.getElementsByClassName('goBack');
+var clearHighScoreBtn = document.getElementsByClassName('clearHighScore');
+var timeInterval = '';
 var points = 0;
-var totalPoints;
 var currentQuestion = 0;
 
 
@@ -86,7 +90,8 @@ function startQuiz() {
 }
 // Create countdown function
 function countdown() {
-    var timeInterval = setInterval(function () {
+     timeInterval = setInterval(function () {
+        points = timeLeft;
         if(timeLeft > 1) {
             timerEl.textContent = timeLeft + ' seconds remaining';
             timeLeft--;
@@ -96,49 +101,25 @@ function countdown() {
         } else {
             timerEl.textContent = '';
             clearInterval(timeInterval);
+            results();
         }
     }, 1000);
-
-}
-// // Create function to pull questions
-function getQuestion() {
-    var currQuestion = questions[currentQuestion]
-    quiz.textContent = currQuestion.q;
-    answer1.textContent = currQuestion.answers.A
-    answer2.textContent = currQuestion.answers.B
-    answer3.textContent = currQuestion.answers.C
-    answer4.textContent = currQuestion.answers.D
+    
 };
-// Create function to pull next question
-function nextQuestion() {
-    currentQuestion++;
-    getQuestion();
-}
-// Create function to remove the hide class
-function showQuiz() {
-    document.getElementById('quiz-section').classList.remove('hide');
-}
-// Create function to call results of quiz
 
-// GET RESULTS TO SHOW AFTER QUIZ IS OVER
-function results () {
+function results() {
     result.textContent = totalPoints;
     document.write(totalPoints);
     renderScoreInitials();
 }
 
-// Create function to display error message if no input on initials
-function displayMessage(type, message) {
-    msgDiv.textContent = message;
-    msgDiv.setAttribute('class', type);
-}
 // Create function to save initials and high score to local storage
 function renderScoreInitials() {
     var initials = localStorage.getItem('initials');
     var highScore = localStorage.getItem('score');
 
     initialsInput.textContent = initials;
-    score.textContent = highScore;
+    savedScore.textContent = highScore;
 }
 // Create button event listener for submitting high score
 submitBtn.addEventListener('click', function(event) {
@@ -152,38 +133,62 @@ submitBtn.addEventListener('click', function(event) {
     } else {
         displayMessage('Check out your score!');
 
-        localStorage.setItem('initials', initials);
-        localStorage.setItem('score', highScore);
+        localStorage.setItem('initials', initials.value);
+        localStorage.setItem('score', points);
         renderScoreInitials();
+        result.classList.remove('hide');
     }
 });
-// function corrAnswer() {
-// points =+ 100;
-// }
 
-// function inCorrAnswer() {
+function displayMessage(type, message) {
+    msgDiv.textContent = message;
+    msgDiv.setAttribute('class', type);
+};
 
-// }
-// Create event listener for start quiz button
+function nextQuestion() {
+    currentQuestion++;
+    if(currentQuestion < questions.length) {
+        getQuestion();
+    } else {
+        initialsInput.classList.remove('hide');
+        quizSection.classList.add('hide');
+        clearInterval(timeInterval);
+        score.textContent ='Your Final Score is ' + points;
+    }
+};
+
 startBtn.addEventListener("click", startQuiz);
-// Create event listener for first answer option button
 
-// FIX IF STATEMENTS TO CORROSPOND WITH CORRECT ANSWER & MAKE SURE POINTS ARE ADDED AND TIME IS DOCKED IF WRONG ANSWER IS INPUTED
-for(var i = 0; i < answer.length; i++) {
-    answer[i].addEventListener('click', checkAnswer());
-}
+function showQuiz() {
+    document.getElementById('quiz-section').classList.remove('hide');
+};
+
+function getQuestion() {
+    var currQuestion = questions[currentQuestion]
+    quiz.textContent = currQuestion.q;
+    answer1.textContent = currQuestion.answers.A
+    answer2.textContent = currQuestion.answers.B
+    answer3.textContent = currQuestion.answers.C
+    answer4.textContent = currQuestion.answers.D
+};
+
+for (let i = 0; i < answer.length; i++) {
+    let button = answer[i];
+    button.addEventListener('click', function() {
+        checkAnswer();
+        console.log()
+    });
+};
 
 function checkAnswer() {
-    var j = 0;
-    if (this.textContent == questions[j].correctAnswer){
-        points += 100;
-        console.log(j);
-    } else if (this.textContent !== questions[j].correctAnswer); {
-        timeLeft--;
-        nextQuestion();
+    let correct = answer.textContent == questions[currentQuestion].correctAnswer;
+    if (correct) {
+        console.log('correct!')
     }
-    j++;
-        console.log(this.textContent);
-        console.log(questions[j].correctAnswer);
-    };
+    else {
+        timeLeft -= 10;
+    }
+
+    nextQuestion();
+};
 

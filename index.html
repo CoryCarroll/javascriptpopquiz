@@ -13,22 +13,28 @@
         <div>
             <button id="start">Start Quiz</button>
             <div id="countdown"></div>
-            <div id="result"></div>
-            <div id="score"></div>
-            <label for="initials" class="hide">Initials</label>
-            <input type="text" name="initials" id="initials" class="hide" placeholder="CC">
-            <div id="msg" class="hide"></div>
-            <button id="submit" class="hide">Submit High Score</button>
         </div>
     <div class="container">
         <div id="quiz-section" class="hide">
             <div id="quiz"></div>
-            <button id="answer1"></button>
-            <button id="answer2"></button>
-            <button id="answer3"></button>
-            <button id="answer4"></button>
+            <button class="answer" id="answer1"></button>
+            <button class="answer" id="answer2"></button>
+            <button class="answer" id="answer3"></button>
+            <button class="answer" id="answer4"></button>
         </div>
     </div>
-        <script src="./script.js"></script>
+    <div id="initialInput" class="hide">
+        <div id="score">Points: 0</div>
+        <label for="initials">Initials</label>
+        <input type="text" name="initials" id="initials">
+        <div id="msg"></div>
+        <button id="submit">Submit High Score</button>
+    </div>
+    <div id="result" class="hide">
+        <div id="savedScore"></div>
+        <button class="goBack">Go Back</button>
+        <button class="clearHighScore">Clear High Score</button>
+    </div>
+        <script src="./testscript.js"></script>
     </body>
 </html>
